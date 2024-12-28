@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Earthquake Alert</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Earthquake Alert</h1>
+    <div id="alert">Fetching latest earthquake data...</div>
+  </header>
+
+  <main id="layout">
+    <!-- Left-side: Map -->
+    <div id="map"></div>
+
+    <!-- Right-side: Controls and information -->
+    <div id="right-content">
+      <a href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id=TK8T26jWCtKnR9r6B2xS0C&redirect_uri=https://kaiyin1205.github.io/SafetyAlert.github.io/callback&scope=notify&state=unique_state_value" 
+         class="line-button">
+        LINE Notifications
+      </a>
+      <div id="settings">
+        <label for="threshold">Set Notification Threshold:</label>
+        <select id="threshold">
+          <option value="1">1 or above</option>
+          <option value="2">2 or above</option>
+          <option value="3" selected>3 or above</option>
+          <option value="4">4 or above</option>
+          <option value="5">5 or above</option>
+        </select>
+      </div>
+      <div id="earthquake-data">
+        <h2>Simulated Earthquake Information</h2>
+        <p><strong>Date:</strong> 2024-12-25</p>
+        <p><strong>Location:</strong> 9.5 km SE of Hualien County</p>
+        <p><strong>Magnitude:</strong> 5.4</p>
+        <p><strong>Depth:</strong> 15 km</p>
+        <p><strong>Origin Time:</strong> 2024-12-25T15:30:00</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Current Time Display -->
+  <div id="current-time"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Initialize Leaflet map
+    const map = L.map('map').setView([24.0, 121.0], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Add marker for simulated earthquake
+    const earthquakeMarker = L.marker([23.8, 121.5]).addTo(map);
+    earthquakeMarker.bindPopup("<strong>Simulated Earthquake</strong><br>Hualien County<br>Magnitude: 5.4").openPopup();
+
+    // Update current time
+    function updateTime() {
+      const currentTimeElement = document.getElementById('current-time');
+      const now = new Date();
+      const formattedTime = now.toLocaleTimeString();
+      currentTimeElement.textContent = `Current Time: ${formattedTime}`;
+    }
+
+    // Update time every second
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Add event listener for threshold change
+    document.getElementById('threshold').addEventListener('change', () => {
+      const selectedValue = document.getElementById('threshold').value;
+      alert(`Notification threshold set to: ${selectedValue} or above`);
+    });
+  </script>
+</body>
+</html>
